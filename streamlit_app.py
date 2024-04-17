@@ -1,9 +1,19 @@
 import streamlit as st
 import pandas as pd
-from training_script import rf, cm
+import joblib
+import matplotlib.pyplot as plt
+import seaborn as sns
+from training_script import performance_metrics, cm
 
 # Streamlit UI
 st.title('Diabetes Checkup')
+
+# Display model performance metrics
+st.write("## Model Performance Metrics")
+st.write(f"Accuracy: {performance_metrics['accuracy'] * 100:.2f}%")
+st.write(f"Precision: {performance_metrics['precision']:.2f}")
+st.write(f"Recall: {performance_metrics['recall']:.2f}")
+st.write(f"F1 Score: {performance_metrics['f1']:.2f}")
 
 # Displaying the confusion matrix and performance metrics
 st.write("## Confusion Matrix and Performance Metrics")
@@ -35,27 +45,13 @@ user_data_df = pd.DataFrame([user_data])
 st.subheader('Patient Data')
 st.write(user_data_df)
 
-# Load the trained model
-rf = joblib.load("training_script.py")
-
-# Use the trained model for prediction on user input
-user_result = rf.predict(user_data_df)
-
-# Displaying the prediction result
-st.subheader('Your Report: ')
-output = 'You are Diabetic' if user_result[0] == 1 else 'You are not Diabetic'
-st.title(output)
+# Displaying the prediction result (assuming it's already done in the training_script)
+# You can adjust this part based on your actual prediction logic
 
 # Define color based on prediction result
 color = 'red' if user_result[0] == 1 else 'blue'
 
 # VISUALIZATIONS
-st.write("## Data Visualizations")
-
-# Determine x-axis limits for visualization based on the minimum and maximum age in the dataset
-x_min = min(df['age'])
-x_max = max(df['age'])
-
 # Age vs weight
 st.header('Weight Value Graph (Others vs Yours)')
 fig_weight = plt.figure()
