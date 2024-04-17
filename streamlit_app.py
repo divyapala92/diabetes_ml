@@ -1,43 +1,48 @@
-import pandas as pd
+# streamlit_app.py
+
 import streamlit as st
+import pandas as pd
 import joblib
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 
 # Load the trained model
-loaded_model = joblib.load("trained_model.pkl")
+model = joblib.load("trained_model.pkl")
 
-# Load the label encoder
-label_encoder = joblib.load("label_encoder.pkl")
+# Streamlit UI
+st.title('Diabetes Checkup')
 
-# Load the test data
-test_data = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")
-X_test = test_data[['weight', 'height', 'SBP', 'DBP', 'age']]
-y_test = test_data['diabetes']
-
-# Apply label encoding to y_test
-y_test_encoded = label_encoder.transform(y_test)
-
-# Make predictions on the test data
-y_pred = loaded_model.predict(X_test)
-
-# Ensure both y_test and y_pred are one-dimensional arrays
-y_test_encoded = y_test_encoded.ravel()
-y_pred = y_pred.ravel()
-
-# Calculate performance metrics
-accuracy = accuracy_score(y_test_encoded, y_pred)
-precision = precision_score(y_test_encoded, y_pred)
-recall = recall_score(y_test_encoded, y_pred)
-f1 = f1_score(y_test_encoded, y_pred)
-
-# Display performance metrics
+# Display model performance metrics
 st.write("## Model Performance Metrics")
-st.write(f"Accuracy: {accuracy * 100:.2f}%")
-st.write(f"Precision: {precision:.2f}")
-st.write(f"Recall: {recall:.2f}")
-st.write(f"F1 Score: {f1:.2f}")
+with open("performance_metrics.txt", "r") as f:
+    for line in f:
+        st.write(line.strip())
 
-# Displaying the confusion matrix
-st.write("## Confusion Matrix")
-st.write("Confusion Matrix:")
-st.write(confusion_matrix(y_test_encoded, y_pred))
+# Sidebar for user input
+st.sidebar.header('Patient Data Input')
+
+# Creating sliders for input features
+user_data = {}
+for feature in ['weight', 'height', 'SBP', 'DBP']:
+    user_data[feature] = st.sidebar.slider(f"{feature}", float(df[feature].min()), float(df[feature].max()), float(df[feature].mean()))
+
+# Modify the age slider to cover a wider age range
+user_data['age'] = st.sidebar.slider("Age", 35, 49, 40)  # Adjust the age range as needed
+
+user_data_df = pd.DataFrame([user_data])
+
+# Displaying user input features
+st.subheader('Patient Data')
+st.write(user_data_df)
+
+# Use the trained model for prediction on user input
+user_result = model.predict(user_data_df)
+
+# Displaying the prediction result
+st.subheader('Your Report: ')
+output = 'You are Diabetic' if user_result[0] == 1 else 'You are not Diabetic'
+st.title(output)
+
+# Define color based on prediction result
+color = 'red' if user_result[0] == 1 else 'blue'
+
+# Remaining Streamlit app code for data visualization
+# ...
