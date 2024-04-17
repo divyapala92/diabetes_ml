@@ -3,7 +3,7 @@ import pandas as pd
 import joblib
 
 # Import performance metrics from the training script
-from training_script.py import performance_metrics
+from training_script import performance_metrics
 
 # Streamlit UI
 st.title('Diabetes Checkup')
