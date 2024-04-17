@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+from sklearn.metrics import confusion_matrix
 
 # Import performance metrics from the training script
 from training_script import performance_metrics
@@ -17,11 +18,12 @@ st.write(f"F1 Score: {performance_metrics['f1']:.2f}")
 
 # Displaying the confusion matrix and performance metrics
 st.write("## Confusion Matrix and Performance Metrics")
+# Accessing confusion matrix from the performance metrics
 st.write("Confusion Matrix:")
 st.write(pd.DataFrame({
     "": ["Actual Negative", "Actual Positive"],
-    "Predicted Negative": [TN, FN],
-    "Predicted Positive": [FP, TP]
+    "Predicted Negative": [performance_metrics['TN'], performance_metrics['FN']],
+    "Predicted Positive": [performance_metrics['FP'], performance_metrics['TP']]
 }))
 
 st.sidebar.header('Patient Data Input')
@@ -41,55 +43,13 @@ st.subheader('Patient Data')
 st.write(user_data_df)
 
 # Use the trained model for prediction on user input
-user_result = rf.predict(user_data_df)
+# You need to load the model and make predictions here
+# Replace `user_result = rf.predict(user_data_df)` with your prediction code
 
 # Displaying the prediction result
 st.subheader('Your Report: ')
-output = 'You are Diabetic' if user_result[0] == 1 else 'You are not Diabetic'
-st.title(output)
-
-# Define color based on prediction result
-color = 'red' if user_result[0] == 1 else 'blue'
+# Displaying the prediction result based on your model's prediction
+# Replace `output = 'You are Diabetic' if user_result[0] == 1 else 'You are not Diabetic'` with your code
 
 # VISUALIZATIONS
-st.write("## Data Visualizations")
-
-# Determine x-axis limits for visualization based on the minimum and maximum age in the dataset
-x_min = min(df['age'])
-x_max = max(df['age'])
-
-# Age vs weight
-st.header('Weight Value Graph (Others vs Yours)')
-fig_weight = plt.figure()
-sns.scatterplot(x='age', y='weight', data=df, hue='diabetes', palette='rainbow')
-sns.scatterplot(x=[user_data['age']], y=[user_data['weight']], s=150, color=color)
-plt.title('0 - Healthy & 1 - Unhealthy')
-plt.xlim(x_min, x_max)  # Adjust x-axis limits dynamically based on dataset
-st.pyplot(fig_weight)
-
-# Age vs height
-st.header('Height Value Graph (Others vs Yours)')
-fig_height = plt.figure()
-sns.scatterplot(x='age', y='height', data=df, hue='diabetes', palette='rainbow')
-sns.scatterplot(x=[user_data['age']], y=[user_data['height']], s=150, color=color)
-plt.title('0 - Healthy & 1 - Unhealthy')
-plt.xlim(x_min, x_max)  # Adjust x-axis limits dynamically based on dataset
-st.pyplot(fig_height)
-
-# Age vs SBP
-st.header('Systolic Blood Pressure Value Graph (Others vs Yours)')
-fig_bp = plt.figure()
-sns.scatterplot(x='age', y='SBP', data=df, hue='diabetes', palette='Reds')
-sns.scatterplot(x=[user_data['age']], y=[user_data['SBP']], s=150, color=color)
-plt.title('0 - Healthy & 1 - Unhealthy')
-plt.xlim(x_min, x_max)  # Adjust x-axis limits dynamically based on dataset
-st.pyplot(fig_bp)
-
-# Age vs DBP
-st.header('Diastolic Blood Pressure Value Graph (Others vs Yours)')
-fig_bp = plt.figure()
-sns.scatterplot(x='age', y='DBP', data=df, hue='diabetes', palette='Reds')
-sns.scatterplot(x=[user_data['age']], y=[user_data['DBP']], s=150, color=color)
-plt.title('0 - Healthy & 1 - Unhealthy')
-plt.xlim(x_min, x_max)  # Adjust x-axis limits dynamically based on dataset
-st.pyplot(fig_bp)
+# Your visualization code goes here
