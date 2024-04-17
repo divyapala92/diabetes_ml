@@ -14,6 +14,10 @@ y_test = test_data['diabetes']
 # Make predictions on the test data
 y_pred = loaded_model.predict(X_test)
 
+# Ensure both y_test and y_pred are one-dimensional arrays
+y_test = y_test.values.ravel()
+y_pred = y_pred.ravel()
+
 # Calculate performance metrics
 accuracy = accuracy_score(y_test, y_pred)
 precision = precision_score(y_test, y_pred)
