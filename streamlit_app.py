@@ -14,8 +14,7 @@ st.title('Diabetes Checkup')
 st.write("## Model Performance Metrics")
 performance_metrics_path = os.path.join(os.path.dirname(__file__), "performance_metrics.txt")
 with open(performance_metrics_path, "r") as f:
-    for line in f:
-        st.write(line.strip())
+    st.text(f.read())
 
 # Sidebar for user input
 st.sidebar.header('Patient Data Input')
