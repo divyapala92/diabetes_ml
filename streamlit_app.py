@@ -18,13 +18,12 @@ st.write(f"F1 Score: {performance_metrics['f1']:.2f}")
 
 # Displaying the confusion matrix and performance metrics
 st.write("## Confusion Matrix and Performance Metrics")
-# Accessing confusion matrix from the performance metrics
-st.write("Confusion Matrix:")
-st.write(pd.DataFrame({
-    "": ["Actual Negative", "Actual Positive"],
-    "Predicted Negative": [performance_metrics['TN'], performance_metrics['FN']],
-    "Predicted Positive": [performance_metrics['FP'], performance_metrics['TP']]
-}))
+
+# Load the trained model
+rf = joblib.load("trained_model.pkl")
+
+# Read the dataset for reference
+df = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")
 
 st.sidebar.header('Patient Data Input')
 
@@ -43,13 +42,28 @@ st.subheader('Patient Data')
 st.write(user_data_df)
 
 # Use the trained model for prediction on user input
-# You need to load the model and make predictions here
-# Replace `user_result = rf.predict(user_data_df)` with your prediction code
+user_result = rf.predict(user_data_df)
+
+# Calculate confusion matrix based on user's prediction and true values
+# This will give you TN, FP, FN, and TP
+y_true = [0]  # Assuming the true label for the user's input is unknown
+conf_matrix = confusion_matrix(y_true, user_result)
+
+# Display the confusion matrix
+st.write("Confusion Matrix:")
+st.write(pd.DataFrame({
+    "": ["Actual Negative", "Actual Positive"],
+    "Predicted Negative": [conf_matrix[0][0], conf_matrix[1][0]],
+    "Predicted Positive": [conf_matrix[0][1], conf_matrix[1][1]]
+}))
 
 # Displaying the prediction result
 st.subheader('Your Report: ')
-# Displaying the prediction result based on your model's prediction
-# Replace `output = 'You are Diabetic' if user_result[0] == 1 else 'You are not Diabetic'` with your code
+output = 'You are Diabetic' if user_result[0] == 1 else 'You are not Diabetic'
+st.title(output)
+
+# Define color based on prediction result
+color = 'red' if user_result[0] == 1 else 'blue'
 
 # VISUALIZATIONS
 # Your visualization code goes here
