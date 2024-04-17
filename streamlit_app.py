@@ -10,12 +10,9 @@ model = joblib.load("trained_model.pkl")
 # Streamlit UI
 st.title('Diabetes Checkup')
 
-
 # Display model performance metrics
 st.write("## Model Performance Metrics")
-performance_metrics_path = "performance_metrics.txt"
-with open(performance_metrics_path, "r") as f:
-    st.text(f.read())
+st.write("Training Metrics:", performance_metrics)  # Display the training metrics directly
 
 # Sidebar for user input
 st.sidebar.header('Patient Data Input')
