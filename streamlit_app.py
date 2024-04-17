@@ -46,7 +46,7 @@ st.subheader('Patient Data')
 st.write(user_data_df)
 
 # Load the trained model
-rf = joblib.load("trained_model.pkl")
+rf = joblib.load("training_script.py")
 
 # Use the trained model for prediction on user input
 user_result = rf.predict(user_data_df)
