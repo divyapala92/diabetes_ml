@@ -12,7 +12,8 @@ st.title('Diabetes Checkup')
 
 # Display model performance metrics
 st.write("## Model Performance Metrics")
-with open("performance_metrics.txt", "r") as f:
+performance_metrics_path = os.path.join(os.path.dirname(__file__), "performance_metrics.txt")
+with open(performance_metrics_path, "r") as f:
     for line in f:
         st.write(line.strip())
 
