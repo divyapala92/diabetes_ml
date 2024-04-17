@@ -10,9 +10,10 @@ model = joblib.load("trained_model.pkl")
 # Streamlit UI
 st.title('Diabetes Checkup')
 
+
 # Display model performance metrics
 st.write("## Model Performance Metrics")
-performance_metrics_path = os.path.join(os.path.dirname(__file__), "performance_metrics.txt")
+performance_metrics_path = os.path.join(os.path.dirname(sys.argv[0]), "performance_metrics.txt")
 with open(performance_metrics_path, "r") as f:
     st.text(f.read())
 
