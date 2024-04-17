@@ -1,12 +1,9 @@
-# training_script.py
-
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 import joblib
-import json
 
 # Read the dataset
 df = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")
@@ -44,13 +41,11 @@ f1 = 2 * (precision * recall) / (precision + recall)
 # Save the trained model to a file
 joblib.dump(rf, "trained_model.pkl")
 
-# Save performance metrics to a JSON file
+# Return the performance metrics directly
 performance_metrics = {
     "accuracy": accuracy,
     "precision": precision,
     "recall": recall,
     "f1": f1
 }
-
-with open("performance_metrics.json", "w") as f:
-    json.dump(performance_metrics, f)
+performance_metrics
