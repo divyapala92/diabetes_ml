@@ -1,10 +1,9 @@
 import streamlit as st
 import pandas as pd
 import joblib
-from sklearn.metrics import confusion_matrix
 
-# Import performance metrics from the training script
-from training_script import performance_metrics
+# Import performance metrics and confusion matrix from the training script
+from training_script import performance_metrics, cm
 
 # Streamlit UI
 st.title('Diabetes Checkup')
@@ -19,13 +18,18 @@ st.write(f"F1 Score: {performance_metrics['f1']:.2f}")
 # Displaying the confusion matrix and performance metrics
 st.write("## Confusion Matrix and Performance Metrics")
 
-# Load the trained model
-rf = joblib.load("trained_model.pkl")
+# Display the confusion matrix
+st.write("Confusion Matrix:")
+st.write(pd.DataFrame({
+    "": ["Actual Negative", "Actual Positive"],
+    "Predicted Negative": [cm[0][0], cm[1][0]],
+    "Predicted Positive": [cm[0][1], cm[1][1]]
+}))
+
+st.sidebar.header('Patient Data Input')
 
 # Read the dataset for reference
 df = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")
-
-st.sidebar.header('Patient Data Input')
 
 # Creating sliders for input features
 user_data = {}
@@ -41,21 +45,11 @@ user_data_df = pd.DataFrame([user_data])
 st.subheader('Patient Data')
 st.write(user_data_df)
 
+# Load the trained model
+rf = joblib.load("trained_model.pkl")
+
 # Use the trained model for prediction on user input
 user_result = rf.predict(user_data_df)
-
-# Calculate confusion matrix based on user's prediction and true values
-# This will give you TN, FP, FN, and TP
-y_true = [0]  # Assuming the true label for the user's input is unknown
-conf_matrix = confusion_matrix(y_true, user_result)
-
-# Display the confusion matrix
-st.write("Confusion Matrix:")
-st.write(pd.DataFrame({
-    "": ["Actual Negative", "Actual Positive"],
-    "Predicted Negative": [conf_matrix[0][0], conf_matrix[1][0]],
-    "Predicted Positive": [conf_matrix[0][1], conf_matrix[1][1]]
-}))
 
 # Displaying the prediction result
 st.subheader('Your Report: ')
@@ -66,4 +60,44 @@ st.title(output)
 color = 'red' if user_result[0] == 1 else 'blue'
 
 # VISUALIZATIONS
-# Your visualization code goes here
+st.write("## Data Visualizations")
+
+# Determine x-axis limits for visualization based on the minimum and maximum age in the dataset
+x_min = min(df['age'])
+x_max = max(df['age'])
+
+# Age vs weight
+st.header('Weight Value Graph (Others vs Yours)')
+fig_weight = plt.figure()
+sns.scatterplot(x='age', y='weight', data=df, hue='diabetes', palette='rainbow')
+sns.scatterplot(x=[user_data['age']], y=[user_data['weight']], s=150, color=color)
+plt.title('0 - Healthy & 1 - Unhealthy')
+plt.xlim(x_min, x_max)  # Adjust x-axis limits dynamically based on dataset
+st.pyplot(fig_weight)
+
+# Age vs height
+st.header('Height Value Graph (Others vs Yours)')
+fig_height = plt.figure()
+sns.scatterplot(x='age', y='height', data=df, hue='diabetes', palette='rainbow')
+sns.scatterplot(x=[user_data['age']], y=[user_data['height']], s=150, color=color)
+plt.title('0 - Healthy & 1 - Unhealthy')
+plt.xlim(x_min, x_max)  # Adjust x-axis limits dynamically based on dataset
+st.pyplot(fig_height)
+
+# Age vs SBP
+st.header('Systolic Blood Pressure Value Graph (Others vs Yours)')
+fig_bp = plt.figure()
+sns.scatterplot(x='age', y='SBP', data=df, hue='diabetes', palette='Reds')
+sns.scatterplot(x=[user_data['age']], y=[user_data['SBP']], s=150, color=color)
+plt.title('0 - Healthy & 1 - Unhealthy')
+plt.xlim(x_min, x_max)  # Adjust x-axis limits dynamically based on dataset
+st.pyplot(fig_bp)
+
+# Age vs DBP
+st.header('Diastolic Blood Pressure Value Graph (Others vs Yours)')
+fig_bp = plt.figure()
+sns.scatterplot(x='age', y='DBP', data=df, hue='diabetes', palette='Reds')
+sns.scatterplot(x=[user_data['age']], y=[user_data['DBP']], s=150, color=color)
+plt.title('0 - Healthy & 1 - Unhealthy')
+plt.xlim(x_min, x_max)  # Adjust x-axis limits dynamically based on dataset
+st.pyplot(fig_bp)
