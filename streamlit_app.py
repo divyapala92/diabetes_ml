@@ -1,37 +1,20 @@
-# IMPORT STATEMENTS
+# streamlit_app.py
+
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix
 import streamlit as st
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import joblib
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 
+# Load the trained model
+loaded_model = joblib.load("trained_model.pkl")
 
-# Read the dataset
-df = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")
+# Streamlit UI
+st.title('Diabetes Checkup')
 
-# Label Encoding
-le = LabelEncoder()
-df['diabetes'] = le.fit_transform(df['diabetes'])
+# Rest of the Streamlit code goes here
+# You can copy the Streamlit code from the previous example
+# Make sure to replace the model-related code with the loaded_model variable
+# and remove the model training part
 
-# Define features and target variable based on specified important features
-X = df[['weight', 'height', 'SBP', 'DBP', 'age']]
-y = df['diabetes']
-
-# Splitting the dataset into training and test sets using train_test_split function from scikit learn
-x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-
-# Initialise and train a random forest classifier using training data
-rf = RandomForestClassifier()
-rf.fit(x_train, y_train)
-
-# Save the trained model to a file
-joblib.dump(rf, "trained_model.pkl")
 
 # Streamlit UI
 st.title('Diabetes Checkup')
