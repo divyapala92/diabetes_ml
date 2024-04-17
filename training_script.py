@@ -43,7 +43,7 @@ f1 = 2 * (precision * recall) / (precision + recall)
 # Save the trained model to a file
 joblib.dump(rf, "trained_model.pkl")
 
-# Save performance metrics to a file
+# Return performance metrics
 performance_metrics = {
     "accuracy": accuracy,
     "precision": precision,
@@ -51,6 +51,4 @@ performance_metrics = {
     "f1": f1
 }
 
-with open("performance_metrics.txt", "w") as f:
-    for metric, value in performance_metrics.items():
-        f.write(f"{metric}: {value}\n")
+performance_metrics  # Return the metrics as a dictionary
