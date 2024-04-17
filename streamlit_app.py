@@ -3,6 +3,8 @@
 import pandas as pd
 import streamlit as st
 import joblib
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+
 
 # Load the trained model
 loaded_model = joblib.load("trained_model.pkl")
