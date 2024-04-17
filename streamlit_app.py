@@ -1,16 +1,35 @@
 import streamlit as st
+import subprocess
 import pandas as pd
 import joblib
 import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# Execute model training script
+try:
+    subprocess.run(["python", "model_training.py"], check=True)
+    st.write("Model trained successfully!")
+except subprocess.CalledProcessError:
+    st.error("Error occurred during model training. Please check the `model_training.py` script.")
+
 # Load trained model
-rf = joblib.load("model.pkl")
+try:
+    rf = joblib.load("model.pkl")
+    st.write("Model loaded successfully!")
+except FileNotFoundError:
+    st.error("Model file not found! Please ensure that the `model_training.py` script is executed to generate the `model.pkl` file.")
 
 # Load metrics
-with open("metrics.pkl", "rb") as f:
-    metrics = pickle.load(f)
+try:
+    with open("metrics.pkl", "rb") as f:
+        metrics = pickle.load(f)
+    st.write("Metrics loaded successfully!")
+except FileNotFoundError:
+    st.error("Metrics file not found! Please ensure that the `model_training.py` script is executed to generate the `metrics.pkl` file.")
+
+# Streamlit UI continues as before...
+
 
 # Streamlit UI
 st.title('Diabetes Checkup')
