@@ -1,46 +1,33 @@
-# streamlit_app.py
-
 import pandas as pd
 import streamlit as st
 import joblib
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-
 
 # Load the trained model
 loaded_model = joblib.load("trained_model.pkl")
 
-# Streamlit UI
-st.title('Diabetes Checkup')
-
-# Rest of the Streamlit code goes here
-# You can copy the Streamlit code from the previous example
-# Make sure to replace the model-related code with the loaded_model variable
-# and remove the model training part
-
+# Load performance metrics
+performance_metrics = {}
+with open("performance_metrics.txt", "r") as f:
+    for line in f:
+        metric, value = line.strip().split(": ")
+        performance_metrics[metric] = float(value)
 
 # Streamlit UI
 st.title('Diabetes Checkup')
 
-st.write("## Model Performance Metrics")
-# Since model performance metrics are calculated using the test set, they remain constant
-st.write(f"Accuracy: {accuracy_score(y_test, rf.predict(x_test)) * 100:.2f}%")
-st.write(f"Precision: {precision_score(y_test, rf.predict(x_test)):.2f}")
-st.write(f"Recall: {recall_score(y_test, rf.predict(x_test)):.2f}")
-st.write(f"F1 Score: {f1_score(y_test, rf.predict(x_test)):.2f}")
+# Display a message indicating that the model is loaded
+st.write("## Model loaded successfully!")
 
-# Displaying the confusion matrix and performance metrics
-st.write("## Confusion Matrix and Performance Metrics")
-st.write("Confusion Matrix:")
-st.write(pd.DataFrame({
-    "": ["Actual Negative", "Actual Positive"],
-    "Predicted Negative": [confusion_matrix(y_test, rf.predict(x_test))[0, 0], confusion_matrix(y_test, rf.predict(x_test))[1, 0]],
-    "Predicted Positive": [confusion_matrix(y_test, rf.predict(x_test))[0, 1], confusion_matrix(y_test, rf.predict(x_test))[1, 1]]
-}))
+# Display model performance metrics
+st.write("## Model Performance Metrics (Training Performance)")
+for metric, value in performance_metrics.items():
+    st.write(f"{metric.capitalize()}: {value:.2f}")
 
 st.sidebar.header('Patient Data Input')
 
 # Creating sliders for input features
 user_data = {}
+# You may need to adjust the range and step size of the sliders based on your data
 for feature in ['weight', 'height', 'SBP', 'DBP']:
     user_data[feature] = st.sidebar.slider(f"{feature}", float(df[feature].min()), float(df[feature].max()), float(df[feature].mean()))
 
@@ -54,8 +41,6 @@ st.subheader('Patient Data')
 st.write(user_data_df)
 
 # Use the trained model for prediction on user input
-# Load the trained model
-loaded_model = joblib.load("trained_model.pkl")
 user_result = loaded_model.predict(user_data_df)
 
 # Displaying the prediction result
