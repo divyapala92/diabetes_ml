@@ -3,7 +3,7 @@ import pandas as pd
 import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
-from training_script import performance_metrics, cm
+from training_script import performance_metrics, cm, rf  # Importing the trained model directly
 
 # Streamlit UI
 st.title('Diabetes Checkup')
@@ -45,8 +45,8 @@ user_data_df = pd.DataFrame([user_data])
 st.subheader('Patient Data')
 st.write(user_data_df)
 
-# Displaying the prediction result (assuming it's already done in the training_script)
-# You can adjust this part based on your actual prediction logic
+# Use the trained model for prediction on user input
+user_result = rf.predict(user_data_df)
 
 # Define color based on prediction result
 color = 'red' if user_result[0] == 1 else 'blue'
