@@ -1,3 +1,5 @@
+# training_script.py
+
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -51,12 +53,3 @@ performance_metrics = {
 with open("performance_metrics.txt", "w") as f:
     for metric, value in performance_metrics.items():
         f.write(f"{metric}: {value}\n")
-
-
-accuracy = (TP + TN) / (TP + TN + FP + FN)
-precision = TP / (TP + FP)
-recall = TP / (TP + FN)
-f1 = 2 * (precision * recall) / (precision + recall)
-
-# Save the trained model to a file
-joblib.dump(rf, "trained_model.pkl")
