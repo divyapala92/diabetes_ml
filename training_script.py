@@ -49,8 +49,6 @@ print("Precision:", precision)
 print("Recall:", recall)
 print("F1 Score:", f1)
 
-# Save the trained model to a file
-joblib.dump(rf, "trained_model.pkl")
 
 # Return the performance metrics directly
 performance_metrics = {
