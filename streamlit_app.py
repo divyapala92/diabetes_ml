@@ -52,6 +52,12 @@ user_result = rf.predict(user_data_df)
 color = 'red' if user_result[0] == 1 else 'blue'
 
 # VISUALIZATIONS
+st.write("## Data Visualizations")
+
+# Determine x-axis limits for visualization based on the minimum and maximum age in the dataset
+x_min = min(df['age'])
+x_max = max(df['age'])
+
 # Age vs weight
 st.header('Weight Value Graph (Others vs Yours)')
 fig_weight = plt.figure()
@@ -86,4 +92,4 @@ sns.scatterplot(x='age', y='DBP', data=df, hue='diabetes', palette='Reds')
 sns.scatterplot(x=[user_data['age']], y=[user_data['DBP']], s=150, color=color)
 plt.title('0 - Healthy & 1 - Unhealthy')
 plt.xlim(x_min, x_max)  # Adjust x-axis limits dynamically based on dataset
-st.pyplot(fig_bp)
+st.pyplot(fig_bp) 
