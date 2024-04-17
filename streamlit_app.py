@@ -9,6 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+
 
 # Read the dataset
 df = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")
