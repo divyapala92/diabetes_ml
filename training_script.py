@@ -1,8 +1,10 @@
+# training_script.py
+
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 import joblib
 
 # Read the dataset
@@ -23,14 +25,10 @@ x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 rf = RandomForestClassifier()
 rf.fit(x_train, y_train)
 
-# Save the trained model to a file
-joblib.dump(rf, "trained_model.pkl")
-
-# Save the label encoder to a file
-joblib.dump(le, "label_encoder.pkl")
-
-# Save performance metrics to a file
+# Use trained model to make predictions on the test set
 y_pred = rf.predict(x_test)
+
+# Calculate the confusion matrix and performance metrics
 cm = confusion_matrix(y_test, y_pred)
 TP = cm[1, 1]
 TN = cm[0, 0]
@@ -42,6 +40,10 @@ precision = TP / (TP + FP)
 recall = TP / (TP + FN)
 f1 = 2 * (precision * recall) / (precision + recall)
 
+# Save the trained model to a file
+joblib.dump(rf, "trained_model.pkl")
+
+# Save performance metrics to a file
 performance_metrics = {
     "accuracy": accuracy,
     "precision": precision,
