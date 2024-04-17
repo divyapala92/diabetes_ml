@@ -38,6 +38,17 @@ precision = TP / (TP + FP)
 recall = TP / (TP + FN)
 f1 = 2 * (precision * recall) / (precision + recall)
 
+# Print the confusion matrix
+print("Confusion Matrix:")
+print(cm)
+
+# Print the performance metrics
+print("Performance Metrics:")
+print("Accuracy:", accuracy)
+print("Precision:", precision)
+print("Recall:", recall)
+print("F1 Score:", f1)
+
 # Save the trained model to a file
 joblib.dump(rf, "trained_model.pkl")
 
