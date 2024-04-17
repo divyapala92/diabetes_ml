@@ -2,11 +2,14 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import joblib
 
-# Load trained model and metrics
-data = np.load("model_and_metrics.npz", allow_pickle=True)
-rf = data["model"].item()
-metrics = data["metrics"].item()
+# Load trained model
+rf = joblib.load("model.pkl")
+
+# Load metrics
+with open("metrics.pkl", "rb") as f:
+    metrics = pickle.load(f)
 
 # Streamlit UI
 st.title('Diabetes Checkup')
