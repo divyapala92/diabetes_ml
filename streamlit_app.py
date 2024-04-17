@@ -3,7 +3,7 @@ import pandas as pd
 import joblib
 
 # Load the trained model
-model = joblib.load("trained_model.pkl")
+model = joblib.load("training_script.py")
 
 # Load the performance metrics directly from the training script output
 performance_metrics = {
