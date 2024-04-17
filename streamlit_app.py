@@ -2,16 +2,8 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Load the trained model
-model = joblib.load("training_script.py")
-
-# Load the performance metrics directly from the training script output
-performance_metrics = {
-    "accuracy": 0.85,  # Replace with actual values
-    "precision": 0.75,
-    "recall": 0.90,
-    "f1": 0.82
-}
+# Import performance metrics from the training script
+from training import performance_metrics
 
 # Streamlit UI
 st.title('Diabetes Checkup')
