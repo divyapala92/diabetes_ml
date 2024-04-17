@@ -1,52 +1,53 @@
-import streamlit as st
-import subprocess
+# IMPORT STATEMENTS
 import pandas as pd
-import joblib
-import pickle
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix
+import streamlit as st
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import joblib
 
-# Execute model training script
-try:
-    subprocess.run(["python", "model_training.py"], check=True)
-    st.write("Model trained successfully!")
-except subprocess.CalledProcessError:
-    st.error("Error occurred during model training. Please check the `model_training.py` script.")
+# Read the dataset
+df = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")
 
-# Load trained model
-try:
-    rf = joblib.load("model.pkl")
-    st.write("Model loaded successfully!")
-except FileNotFoundError:
-    st.error("Model file not found! Please ensure that the `model_training.py` script is executed to generate the `model.pkl` file.")
+# Label Encoding
+le = LabelEncoder()
+df['diabetes'] = le.fit_transform(df['diabetes'])
 
-# Load metrics
-try:
-    with open("metrics.pkl", "rb") as f:
-        metrics = pickle.load(f)
-    st.write("Metrics loaded successfully!")
-except FileNotFoundError:
-    st.error("Metrics file not found! Please ensure that the `model_training.py` script is executed to generate the `metrics.pkl` file.")
+# Define features and target variable based on specified important features
+X = df[['weight', 'height', 'SBP', 'DBP', 'age']]
+y = df['diabetes']
 
-# Streamlit UI continues as before...
+# Splitting the dataset into training and test sets using train_test_split function from scikit learn
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
+# Initialise and train a random forest classifier using training data
+rf = RandomForestClassifier()
+rf.fit(x_train, y_train)
+
+# Save the trained model to a file
+joblib.dump(rf, "trained_model.pkl")
 
 # Streamlit UI
 st.title('Diabetes Checkup')
 
 st.write("## Model Performance Metrics")
-st.write(f"Accuracy: {metrics['accuracy'] * 100:.2f}%")
-st.write(f"Precision: {metrics['precision']:.2f}")
-st.write(f"Recall: {metrics['recall']:.2f}")
-st.write(f"F1 Score: {metrics['f1']:.2f}")
+# Since model performance metrics are calculated using the test set, they remain constant
+st.write(f"Accuracy: {accuracy_score(y_test, rf.predict(x_test)) * 100:.2f}%")
+st.write(f"Precision: {precision_score(y_test, rf.predict(x_test)):.2f}")
+st.write(f"Recall: {recall_score(y_test, rf.predict(x_test)):.2f}")
+st.write(f"F1 Score: {f1_score(y_test, rf.predict(x_test)):.2f}")
 
 # Displaying the confusion matrix and performance metrics
 st.write("## Confusion Matrix and Performance Metrics")
 st.write("Confusion Matrix:")
 st.write(pd.DataFrame({
     "": ["Actual Negative", "Actual Positive"],
-    "Predicted Negative": [metrics['confusion_matrix'][0, 0], metrics['confusion_matrix'][1, 0]],
-    "Predicted Positive": [metrics['confusion_matrix'][0, 1], metrics['confusion_matrix'][1, 1]]
+    "Predicted Negative": [confusion_matrix(y_test, rf.predict(x_test))[0, 0], confusion_matrix(y_test, rf.predict(x_test))[1, 0]],
+    "Predicted Positive": [confusion_matrix(y_test, rf.predict(x_test))[0, 1], confusion_matrix(y_test, rf.predict(x_test))[1, 1]]
 }))
 
 st.sidebar.header('Patient Data Input')
@@ -66,7 +67,9 @@ st.subheader('Patient Data')
 st.write(user_data_df)
 
 # Use the trained model for prediction on user input
-user_result = rf.predict(user_data_df)
+# Load the trained model
+loaded_model = joblib.load("trained_model.pkl")
+user_result = loaded_model.predict(user_data_df)
 
 # Displaying the prediction result
 st.subheader('Your Report: ')
