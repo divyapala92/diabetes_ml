@@ -3,8 +3,9 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-import numpy as np
+from sklearn.metrics import confusion_matrix
+import joblib
+import pickle
 
 # Read the dataset
 df = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")
@@ -27,8 +28,13 @@ rf.fit(x_train, y_train)
 # Use trained model to make predictions on the test set
 y_pred = rf.predict(x_test)
 
-# Calculate the confusion matrix and performance metrics
+# Calculate the confusion matrix
 cm = confusion_matrix(y_test, y_pred)
+
+# Save trained model
+joblib.dump(rf, "model.pkl")
+
+# Calculate performance metrics
 TP = cm[1, 1]
 TN = cm[0, 0]
 FP = cm[0, 1]
@@ -48,12 +54,6 @@ metrics = {
     "confusion_matrix": cm
 }
 
-import joblib
-
-# Save trained model
-joblib.dump(rf, "model.pkl")
-
 # Save metrics
 with open("metrics.pkl", "wb") as f:
     pickle.dump(metrics, f)
-
