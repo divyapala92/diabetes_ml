@@ -6,15 +6,15 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 # Load the trained model
 loaded_model = joblib.load("trained_model.pkl")
 
-# Streamlit UI
-st.title('Diabetes Checkup')
+# Load the test data
+test_data = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")
+X_test = test_data[['weight', 'height', 'SBP', 'DBP', 'age']]
+y_test = test_data['diabetes']
 
-# Load performance metrics directly from the trained model
-y_test = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")['diabetes']
-x_test = pd.read_csv("Clean_BDHS_Diabetic_Data_Jahan_Balanced.csv")[['weight', 'height', 'SBP', 'DBP', 'age']]
+# Make predictions on the test data
+y_pred = loaded_model.predict(X_test)
 
 # Calculate performance metrics
-y_pred = loaded_model.predict(x_test)
 accuracy = accuracy_score(y_test, y_pred)
 precision = precision_score(y_test, y_pred)
 recall = recall_score(y_test, y_pred)
@@ -31,5 +31,3 @@ st.write(f"F1 Score: {f1:.2f}")
 st.write("## Confusion Matrix")
 st.write("Confusion Matrix:")
 st.write(confusion_matrix(y_test, y_pred))
-
-# Streamlit UI continued...
