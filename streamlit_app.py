@@ -48,6 +48,11 @@ st.write(user_data_df)
 # Use the trained model for prediction on user input
 user_result = rf.predict(user_data_df)
 
+# Displaying the prediction result
+st.subheader('Your Report: ')
+output = 'You are Diabetic' if user_result[0] == 1 else 'You are not Diabetic'
+st.title(output)
+
 # Define color based on prediction result
 color = 'red' if user_result[0] == 1 else 'blue'
 
