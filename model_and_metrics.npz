@@ -48,5 +48,12 @@ metrics = {
     "confusion_matrix": cm
 }
 
-# Save trained model and metrics for later use
-np.savez("model_and_metrics.npz", model=rf, metrics=metrics)
+import joblib
+
+# Save trained model
+joblib.dump(rf, "model.pkl")
+
+# Save metrics
+with open("metrics.pkl", "wb") as f:
+    pickle.dump(metrics, f)
+
