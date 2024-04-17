@@ -3,9 +3,21 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import subprocess
+import json
 
 # Load the trained model
 model = joblib.load("trained_model.pkl")
+
+# Execute the training script to get performance metrics
+training_script_output = subprocess.run(
+    ["python", "training_script.py"],
+    capture_output=True,
+    text=True
+).stdout
+
+# Parse the output to get performance metrics
+performance_metrics = json.loads(training_script_output)
 
 # Streamlit UI
 st.title('Diabetes Checkup')
